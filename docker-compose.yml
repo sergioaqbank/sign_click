@@ -8,7 +8,7 @@ services:
     volumes:
       - .:/var/www/html
     ports:
-      - "8000:9000"
+      - "8000:8000"  # Mapeia a porta 8000 do host para a porta 8000 do container
     environment:
       APP_ENV: local
       APP_DEBUG: true
@@ -19,4 +19,34 @@ services:
       DB_DATABASE: laravel
       DB_USERNAME: postgres
       DB_PASSWORD: root
+    depends_on:
+      - db
+    command: php artisan serve --host=0.0.0.0 --port=8000  # Comando corrigido e alinhado corretamente
 
+  db:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: laravel
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: .  # Caminho para a raiz do projeto
+      dockerfile: Dockerfile.react  # Nome do Dockerfile do React
+    ports:
+      - "5173:5173"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db_data:

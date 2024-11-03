@@ -35,4 +35,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
+Route::get('/hello', function () {
+    return Inertia::render('HelloWorld'); // O nome do componente React
+});
+
+
+
 require __DIR__.'/auth.php';

@@ -1,0 +1,26 @@
+# Usando a imagem oficial do Node.js na versão 14
+FROM node:16
+
+
+# Define o diretório de trabalho dentro do container
+WORKDIR /app
+
+# Copia o package.json e package-lock.json da raiz do projeto para o diretório de trabalho
+COPY package*.json ./
+
+# Instala as dependências
+RUN npm install
+
+# Copia todo o código React da pasta resources/js para /app
+COPY resources/js /app
+
+
+# Compila o código (produz os arquivos estáticos)
+RUN npm run build
+
+# Expondo a porta 3000 para acesso externo
+EXPOSE 3000
+
+# Comando padrão para iniciar o servidor em modo de desenvolvimento
+CMD ["npm", "run", "dev", "--", "--host"]
+
